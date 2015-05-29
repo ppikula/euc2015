@@ -11,6 +11,8 @@
         - iotop
         - vim
         - lsof
+        - make
+        - wget
         - docker.io
     - name: increase filedescriptor limit in sysctl
       sysctl: name="fs.file-max" value="500000" sysctl_set=yes state=present reload=yes
@@ -23,6 +25,8 @@
         - hard
     - name: set hostname
       hostname: name=euc2015
+    - name: add vagrant user to docker group
+      user: name=vagrant groups=docker append=yes
     - name: increase ipv4 local port range in sysctl
       sysctl: name="net.ipv4.ip_local_port_range" value="1024 65535" sysctl_set=yes state=present reload=yes
 
