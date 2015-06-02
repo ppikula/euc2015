@@ -1,27 +1,39 @@
 amocmaster:
   build: containers/amoc_master
   hostname: amocmaster
+  mem_limit: 100m
+  cpuset: 1
   links:
     - slave2
     - slave1
 
+mim1:
+  build: containers/mongooseim-docker
+  hostname: amocmaster
+  cpuset: 0
+  mem_limit: 400m
+
 slave1:
   build: containers/amoc_slave
   hostname: slave1
+  cpuset: 1
   links:
     - slave2
 
 slave2:
   build: containers/amoc_slave
+  cpuset: 1
   hostname: slave2
 
 graphite:
+  cpuset: 1
   ports:
     - "8080:80"
     - "2003:2003"
   image: sitespeedio/graphite
 
 grafana:
+  cpuset: 1
   ports:
     - "8081:3000"
   links:
