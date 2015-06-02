@@ -3,6 +3,7 @@ amocmaster:
   hostname: amocmaster
   mem_limit: 100m
   cpuset: 1
+  tty: true
   links:
     - slave2
     - slave1
@@ -10,6 +11,7 @@ amocmaster:
 mim1:
   build: containers/mongooseim-docker
   hostname: amocmaster
+  tty: true
   cpuset: 0
   mem_limit: 400m
 
