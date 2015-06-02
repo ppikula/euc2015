@@ -10,7 +10,7 @@ amocmaster:
 
 mim1:
   build: containers/mongooseim-docker
-  hostname: amocmaster
+  hostname: mim1
   tty: true
   cpuset: 0
   mem_limit: 400m
