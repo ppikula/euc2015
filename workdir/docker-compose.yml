@@ -1,0 +1,32 @@
+amocmaster:
+  build: containers/amoc_master
+  hostname: amocmaster
+  links:
+    - slave2
+    - slave1
+
+
+slave1:
+  build: containers/amoc_slave
+  hostname: slave1
+  links:
+    - slave2
+
+slave2:
+  build: containers/amoc_slave
+  hostname: slave2
+
+graphite:
+  ports:
+    - "8080:80"
+    - "2003:2003"
+  image: sitespeedio/graphite
+
+grafana:
+  ports:
+    - "8081:3000"
+  links:
+    - graphite
+  image: grafana/grafana
+
+

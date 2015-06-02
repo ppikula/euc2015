@@ -6,10 +6,10 @@ WORKDIR /root/
 RUN yum install -y epel-release wget \
     && wget http://packages.erlang-solutions.com/erlang-solutions-1.0-1.noarch.rpm \
     && rpm -Uvh erlang-solutions-1.0-1.noarch.rpm \
-    && yum install -y supervisor openssh-server erlang-base erlang-dev \
+    && yum install -y supervisor openssh-server erlang-base erlang-dev libselinux-python \
                       erlang-nox erlang-dialyzer erlang-reltool erlang-test_server \
                       erlang-xmerl erlang-edoc erlang-snmp erlang-eunit git net-tools htop\
-                      make expat-devel ansible erlang-erl_interface hostname gcca\
+                      make expat-devel ansible erlang-erl_interface hostname gcc sshpass vim\
     && echo 'root:root' | chpasswd && sshd-keygen
 
 RUN git clone https://github.com/esl/amoc.git
