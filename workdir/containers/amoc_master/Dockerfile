@@ -20,5 +20,4 @@ COPY run.sh /opt/run.sh
 EXPOSE 22
 
 
-CMD ["bash"]
-#CMD ["/opt/run.sh"]
+CMD ["/opt/run.sh"]

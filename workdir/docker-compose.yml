@@ -5,7 +5,6 @@ amocmaster:
     - slave2
     - slave1
 
-
 slave1:
   build: containers/amoc_slave
   hostname: slave1
