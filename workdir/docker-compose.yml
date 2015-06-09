@@ -1,19 +1,23 @@
 amocmaster:
   build: containers/amoc_master
   hostname: amocmaster
-  mem_limit: 100m
+  mem_limit: 200m
   cpuset: 1
   tty: true
   links:
     - slave2
     - slave1
+    - mim1
+    - graphite
 
 mim1:
   build: containers/mongooseim-docker
   hostname: mim1
   tty: true
   cpuset: 0
-  mem_limit: 400m
+  mem_limit: 350m
+  links:
+    - graphite
 
 slave1:
   build: containers/amoc_slave
@@ -21,14 +25,20 @@ slave1:
   cpuset: 1
   links:
     - slave2
+    - mim1
 
 slave2:
   build: containers/amoc_slave
   cpuset: 1
   hostname: slave2
+  links:
+    - mim1
 
 graphite:
   cpuset: 1
+  volumes:
+    - containers/graphite/storage-schemas.conf:/opt/graphite/conf/storage-schemas.conf
+    - containers/graphite/graphite.conf:/etc/nginx/sites-available/graphite.conf
   ports:
     - "8080:80"
     - "2003:2003"
