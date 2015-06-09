@@ -13,17 +13,8 @@
         - lsof
         - make
         - wget
-    - stat: path=/usr/bin/docker
-      register: dockerbin
-    - name: install docker
-      command: wget -qO- https://get.docker.com/ | sh
-      when: dockerbin.stat.exists == False
-    - name: add vagrant to docker group
-      command: sudo usermod -aG docker vagrant
     - name: increase filedescriptor limit in sysctl
       sysctl: name="fs.file-max" value="500000" sysctl_set=yes state=present reload=yes
-    - name: enable docker
-      service: name=docker.io enabled=yes
     - name: change security limits
       lineinfile: line="vagrant {{item}} nofile 500000" dest=/etc/security/limits.conf regexp="vagrant {{item}} nofile*"
       with_items:
@@ -31,8 +22,6 @@
         - hard
     - name: set hostname
       hostname: name=euc2015
-    - name: add vagrant user to docker group
-      user: name=vagrant groups=docker append=yes
     - name: increase ipv4 local port range in sysctl
       sysctl: name="net.ipv4.ip_local_port_range" value="1024 65535" sysctl_set=yes state=present reload=yes
 
