@@ -19,21 +19,34 @@ mim1:
   links:
     - graphite
 
-slave1:
-  build: containers/amoc_slave
-  hostname: slave1
-  cpuset: 1
-  links:
-    - slave2
-    - mim1
+#mim2:
+#  build: containers/mongooseim-docker
+#  hostname: mim2
+#  tty: true
+#  cpuset: 0
+#  mem_limit: 350m
+#  environment:
+#    - CLUSTER_WITH=mim1
+#  links:
+#    - graphite
+#    - mim1
 
-slave2:
-  build: containers/amoc_slave
-  cpuset: 1
-  hostname: slave2
-  links:
-    - mim1
 
+#slave1:
+#  build: containers/amoc_slave
+#  hostname: slave1
+#  cpuset: 1
+#  links:
+#    - slave2
+#    - mim1
+#
+#slave2:
+#  build: containers/amoc_slave
+#  cpuset: 1
+#  hostname: slave2
+#  links:
+#    - mim1
+#
 graphite:
   cpuset: 1
   volumes:
