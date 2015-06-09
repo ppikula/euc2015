@@ -1,0 +1,5 @@
+[ejabberd_admin:register(<<"user_", (integer_to_binary(I))/binary>>, <<"localhost">>, <<"password_",(integer_to_binary(I))/binary>>) || I <- lists:seq(1, 1000)].
+
+
+F = fun() ->  timer:sleep(2*60*1000), amoc_local:add(100) end.
+ [ F() || _ <- lists:seq(1,10) ].
