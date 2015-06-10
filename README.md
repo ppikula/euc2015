@@ -45,8 +45,9 @@ cd euc2015
 cp -R /usb-stick-mountpoint/euc2015/.vagrant .
 ```
 
-Apart from `.vagrant` directory, we will need the VirtualBox VMs. Copy them from
-the USB stick to `~/VirtualBox VMs`.  Preferably don't do it from the shell, as this will show no progress indicator.
+Apart from `.vagrant` directory, we will need the VirtualBox VM. Copy it from
+the USB stick to `~/VirtualBox VMs`  (euc_2015...zip) and extract the archive.
+Preferably don't do it from the shell, as this will show no progress indicator.
 
 Once the VMs are copied, let's verify that they start up without errors:
 
