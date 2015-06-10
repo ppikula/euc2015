@@ -4,9 +4,12 @@ amocmaster:
   mem_limit: 200m
   cpuset: 1
   tty: true
+  volumes:
+    - scenarios/:/root/amoc/scenarios
   links:
-    - slave2
-    - slave1
+#    - slave2
+#    - slave1
+#    - mim2
     - mim1
     - graphite
 
@@ -30,8 +33,8 @@ mim1:
 #  links:
 #    - graphite
 #    - mim1
-
-
+#
+#
 #slave1:
 #  build: containers/amoc_slave
 #  hostname: slave1
@@ -39,14 +42,16 @@ mim1:
 #  links:
 #    - slave2
 #    - mim1
-#
+#    - mim2
+
 #slave2:
 #  build: containers/amoc_slave
 #  cpuset: 1
 #  hostname: slave2
 #  links:
 #    - mim1
-#
+#    - mim2
+
 graphite:
   cpuset: 1
   volumes:
