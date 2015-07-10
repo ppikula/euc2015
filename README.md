@@ -1,6 +1,11 @@
 # euc2015
 
-EUC Tutorial: Load testing XMPP servers with Plain Old Erlang
+Erlang User Conference 2015 Tutorial: Load testing XMPP servers with Plain Old Erlang
+
+The tutorial introduces https://github.com/esl/amoc - load testing tool based
+on escalus (https://github.com/esl/amoc) and used extensively to load test
+various MongooseIm installations. For the tutorial please use the euc2015 branch
+that contains some default values used in tutorial test environment.
 
 Some of the steps described below are taken from Radek's tutorial:
 https://github.com/lavrin/euc-2014/ Thanks Radek!
@@ -8,9 +13,9 @@ https://github.com/lavrin/euc-2014/ Thanks Radek!
 
 # Prerequisities
 
-* Vagrant
-* Virtualbox
-* ansible
+* Vagrant (https://www.vagrantup.com/downloads.html)
+* Virtualbox (https://www.virtualbox.org/wiki/Downloads)
+* ansible (http://www.ansible.com/home)
 
 # Installing From scratch
 
@@ -18,7 +23,7 @@ Clone this directory:
 
 `git clone https://github.com/ppikula/euc2015.git`
 
-Start virtualbox machine:
+Start the virtualbox machine:
 
 `vagrant up`
 
@@ -30,11 +35,10 @@ Run the following command to install docker:
 
 `/vagrant/install_docker.sh`
 
-After that step you need to logout and back otherwise you won't be able to use
+After that step you need to logout and login back, otherwise you won't be able to use
 docker without sudo.
 
-
-# Installing from a usb stick
+# Installing from a usb stick (for the tutorial participants)
 
 In case you're setting up the environment from a provided USB stick, you'll
 still need VirtualBox and Vagrant.
@@ -77,16 +81,16 @@ b8d2c52f3a0d        workdir_mim1:latest           "./start.sh"           4 minut
 ```
 
 If you open a browser and paste the following adress `http://localhost:9081/` you
-will see the grafana log in page. Use admin/admin to log in. Now we have to add a
-data source to grafana. The data is going to flow from graphite. Click on the logo
-top left corner, you will see Data Sources section. Go there and add a new data source
-Name:`graphite` `Url: http://graphite` Access: `proxy`.
+will see the grafana login page. Use admin/admin to log in. Now we have to add a
+data source to grafana. In our case the data is going to flow from graphite.
+Click on the logo (top left corner), you will see Data Sources section.
+Go there and add a new data source Name:`graphite` `Url: http://graphite` Access: `proxy`.
 
-Now we are ready to import the dashboard that I've preapared. Click on the "Home"
-button and then import select `XMPP....json` file from the euc2015/dashboards directory.
+Now we are ready to import the dashboard that I've prepared. Click on the "Home"
+button and then import select `XMPP-1433802850849.json` file from the euc2015/dashboards directory.
 Right now you should be able to see six graphs. So the monitoring is ready to use.
 
-The last step required is to create some use accounts:
+The last step is to create some xmpp user accounts:
 
 ```
 # enter Mongoose debug shell
@@ -96,49 +100,63 @@ docker exec -it workdir_mim1_1 mongooseimctl debug
 # exit with C-c C-c
 ```
 
+The command above will create 1K users with the following form user_1@localhost,
+user_2@localhost, user_3@localhost, ... with corresponding passwords: password_1,
+password_2, password_3, ...
+
 We are ready to enter AMOC container with:
 
 `docker exec -it workdir_amocmaster_1 bash`
 
-Now we have to verify the hosts file and setup correct names and options like graphite
-ip.
+Now we have to verify the hosts file in the amoc directory
+and setup correct names and options like the graphite ip address. Follow instructions
+placed as the comments in host file.
 
-
-After that we can run:
+After that we can run, that will create a release and start AMOC:
 
 ```
 make deploy
-/root/amoc_master/bin/amoc
+/root/amoc_master/bin/amoc console
 ```
 
-Right now  we are in the AMOC "UI" in which we can test our scenarios by running it
-on the amocmaster node:
+Right now  we are in the AMOC "UI" in which we can test our scenarios on master node or
+start scenario on the slave nodes.
+
+Just to test you try the following commands:
 
 ```
-amoc_local:do(scenario, 1, 10)  % generate 10 users
-amoc_local:add(scenario, 100) % log in 100 more users
-amoc_local:remove(scenario, 20) % log out 20 users
+amoc_local:do(mongoose_simple, 1, 10)  % generate 10 users
+amoc_local:add(mongoose_simple, 100) % log in 100 more users
+amoc_local:remove(mongoose_simple, 20) % log out 20 users
 ```
+
+When you go back to the grafana dashboard you should be able to see increasing/decreasing
+number of connected users as well as the changing message rate. When you hit certain
+threshold > 500 users MongooseIM will collapse and you won't be able to see new readings
+from Mongoose.
 
 # Scaling MongooseIM and AMOC
 
-To scale Mongooseim you have to uncomment `mim2` section in the docker-compose.yml file
+Now, when we have our test scenario verified we can start to run it acroos many slave nodes.
+
+To scale MongooseIm you have to uncomment `mim2` section in the docker-compose.yml file
 
 In case of AMOC you need to uncomment `slave1` and `slave2` in the docker-compose.yml file
 and add newly created hosts to the `hosts` file on amocmaster.
 
 
-To run sceanarios on  slave nodes we need to replace `amoc_local` with `amoc_dist`
+To run scenarios on  slave nodes we need to replace `amoc_local` with `amoc_dist`
 
 ```
-amoc_dist:do(scenario, 1, 10)  % generate 10 users
-amoc_dist:add(scenario, 100) % log in 100 more users
-amoc_dist:remove(scenario, 20) % log out 20 users
+amoc_dist:do(mongoose_simple, 1, 10)  % generate 10 users
+amoc_dist:add(mongoose_simple, 100) % log in 100 more users
+amoc_dist:remove(mongoose_simple, 20) % log out 20 users
 ```
 
 # Add custom metrics
 
 Take a look at `scenarios/mongoose_simple_with_metrics.erl`
+
 
 # Troubleshooting
 
